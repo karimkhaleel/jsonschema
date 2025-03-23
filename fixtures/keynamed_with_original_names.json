@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/invopop/jsonschema/key-namer-with-original-field-named",
+  "$ref": "#/$defs/KeyNamerWithOriginalFieldNamed",
+  "$defs": {
+    "KeyNamedNested": {
+      "properties": {
+        "nested-renamed-property": {
+          "type": "string"
+        },
+        "NotRenamed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "nested-renamed-property",
+        "NotRenamed"
+      ]
+    },
+    "KeyNamerWithOriginalFieldNamed": {
+      "properties": {
+        "ThisWasLeftAsIs": {
+          "type": "string"
+        },
+        "coming_from_json": {
+          "type": "boolean"
+        },
+        "✨unicode✨  s̸̥͝h̷̳͒e̴̜̽n̸̡̿a̷̘̔n̷̘͐i̶̫̐ǵ̶̯a̵̘͒n̷̮̾s̸̟̓": {
+          "type": "string"
+        },
+        "nested-renamed": {
+          "$ref": "#/$defs/KeyNamedNested"
+        },
+        "35.01": {
+          "type": "integer",
+          "description": "Description was preserved"
+        },
+        "tag_and_field_name:TagAndFieldName": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "required": [
+        "ThisWasLeftAsIs",
+        "coming_from_json",
+        "✨unicode✨  s̸̥͝h̷̳͒e̴̜̽n̸̡̿a̷̘̔n̷̘͐i̶̫̐ǵ̶̯a̵̘͒n̷̮̾s̸̟̓",
+        "nested-renamed",
+        "35.01",
+        "tag_and_field_name:TagAndFieldName"
+      ]
+    }
+  }
+}

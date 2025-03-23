@@ -312,6 +312,15 @@ type KeyNamed struct {
 	RenamedByComputation int `jsonschema_description:"Description was preserved"`
 }
 
+type KeyNamerWithOriginalFieldNamed struct {
+	ThisWasLeftAsIs                     string
+	ComesFromJSON                       bool `json:"coming_from_json"`
+	UnicodeShenanigans                  string
+	NestedNotRenamed                    KeyNamedNested `json:"nested_not_renamed"`
+	RenamedByOriginalNameLenComputation int            `jsonschema_description:"Description was preserved"`
+	TagAndFieldName                     string         `json:"tag_and_field_name"`
+}
+
 type SchemaExtendTestBase struct {
 	FirstName  string `json:"FirstName"`
 	LastName   string `json:"LastName"`
@@ -468,6 +477,30 @@ func TestSchemaGeneration(t *testing.T) {
 				return "unknown case"
 			},
 		}, "fixtures/keynamed.json"},
+		{&KeyNamerWithOriginalFieldNamed{}, &Reflector{
+			KeyNamerWithOriginalFieldName: func(tagName string, fieldName string) string {
+				key := tagName + ":" + fieldName
+				switch key {
+				case "ThisWasLeftAsIs:ThisWasLeftAsIs":
+					return fieldName
+				case "coming_from_json:ComesFromJSON":
+					return tagName
+				case "NotRenamed:NotRenamed":
+					return fieldName
+				case "nested_not_renamed:NestedNotRenamed":
+					return "nested-renamed"
+				case "NestedNotRenamedProperty:NestedNotRenamedProperty":
+					return "nested-renamed-property"
+				case "UnicodeShenanigans:UnicodeShenanigans":
+					return "✨unicode✨  s̸̥͝h̷̳͒e̴̜̽n̸̡̿a̷̘̔n̷̘͐i̶̫̐ǵ̶̯a̵̘͒n̷̮̾s̸̟̓"
+				case "RenamedByOriginalNameLenComputation:RenamedByOriginalNameLenComputation":
+					return fmt.Sprintf("%.2f", float64(len(fieldName))+1/137.0)
+				case "tag_and_field_name:TagAndFieldName":
+					return key
+				}
+				return "unknown case"
+			},
+		}, "fixtures/keynamed_with_original_names.json"},
 		{MapType{}, &Reflector{}, "fixtures/map_type.json"},
 		{ArrayType{}, &Reflector{}, "fixtures/array_type.json"},
 		{SchemaExtendTest{}, &Reflector{}, "fixtures/custom_type_extend.json"},
